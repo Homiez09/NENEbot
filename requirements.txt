@@ -1,0 +1,8 @@
+discord
+join
+purge
+build
+google-api-python-client
+datetime
+requests
+python-dotenv
