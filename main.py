@@ -40,7 +40,7 @@ async def on_message(message):
     await talk_with_bot(message) # TALK WITH BOT
     await pictureeiei(message)
     await show(message)
-    await talk_bot(message)
+    #await talk_bot(message)
     await bot.process_commands(message) 
 
 @bot.event 
