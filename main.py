@@ -1,28 +1,31 @@
 # Made by Phumrapee Soenvanichakul (jannnn1235)
 # Github: https://github.com/Jannnn1235/NENEbot
 
-from ntpath import join
-from re import purge
+
 import random
 import discord
+import rudeList
+import json
+import requests
+import table
+import os
+
+from ntpath import join
+from re import purge
 from discord.ext import commands
 from datetime import datetime
 from discord.ext.commands.core import command
 from googleapiclient.discovery import build
-import rudeList
-import json
+from discord.ext.commands import check
 from discord.ext.commands import has_permissions, MissingPermissions
-import requests
-import table
 from datetime import datetime as date
 from dotenv import load_dotenv
-import os
+from discord.utils import get 
 
 load_dotenv('.env')
 
 bot_start = datetime.today().strftime("%d/%m/%Y")
 
-#bot = commands.Bot(command_prefix=config.PREFIX["command"], intents=discord.Intents().all())
 bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents = discord.Intents().all())
 
 @bot.event
@@ -31,7 +34,6 @@ async def on_ready():
     print(bot_start)
     print("==================")
     await bot.change_presence(activity=discord.Game(name="n.help"))
-
 
 @bot.event # USE FUNCTION
 async def on_message(message):  
@@ -53,7 +55,6 @@ async def on_raw_reaction_add(payload):
                     role = discord.utils.get(bot.get_guild(payload.guild_id).roles, id=x["role_id"])
 
                     await payload.member.add_roles(role)
-
 
 image_types = ["png", "jpeg", "jpg"]
 @bot.event # USE FUNCTION
@@ -163,11 +164,8 @@ async def talk_bot(message):
         x = 9
     else:
         x = 10
-    print(day_today)
-    print(time_start)
-    print(x)
 
-    if 'คาบนี้' in message.content or 'คาบหน้าx' in message.content:  
+    if 'คาบนี้' in message.content:  
         if day_today in table.day and x < 10:
             await message.channel.send(f"{table.day[f'{day_today}'][x]} {table.timestart['timestart'][x]} - {table.timestart['timestart'][x+1]}")
         else:
@@ -198,13 +196,13 @@ async def talk_bot(message):
         embed.set_footer(text="github : https://github.com/Jannnn1235/NENEbot")
         await message.channel.send(embed=embed)
 
-@bot.command() # =clear
+@bot.command() # clear
 @commands.has_guild_permissions(administrator=True)
 @commands.cooldown(1,3,commands.BucketType.user)
 async def clear(ctx, limit=5):
     await ctx.channel.purge(limit=limit+1)
 
-@bot.command() # =info
+@bot.command() # info
 @commands.cooldown(1,5,commands.BucketType.user)
 async def info(message):
     embed=discord.Embed(title="บัตรประจำตัวประชาชน" , color=0x84c5e6)
@@ -215,21 +213,21 @@ async def info(message):
     embed.set_footer(text="github : https://github.com/Jannnn1235/NENEbot")
     await message.send(embed=embed)
     
-@bot.command() # =ด่าคน
+@bot.command() # ด่า
 @commands.cooldown(1,5,commands.BucketType.user)
 async def ด่า(message,*, who):
     eiei = who
     ranrude = random.choice(rudeList.rude)
     await message.channel.send(f"{eiei} {ranrude}")
 
-@bot.command() # =send_dm
+@bot.command() # send_dm
 @commands.has_role(int(os.getenv("role")))
 @commands.cooldown(1,3,commands.BucketType.user)
 async def send_dm(ctx, member:discord.Member, *, content):
     channel = await member.create_dm()
     await channel.send(content)
 
-@bot.command() # =reactrole
+@bot.command() # reactrole
 @commands.has_guild_permissions(administrator=True)
 async def reactrole(ctx, emoji, role: discord.Role,*,message):
     embed = discord.Embed(description = message, color=0x2ECC71)
@@ -251,21 +249,39 @@ async def reactrole(ctx, emoji, role: discord.Role,*,message):
     with open('reactrole.json', 'w') as f:
         json.dump(data,f ,indent=4)
 
-@bot.command() # =online
+@bot.command() # online
 async def online(ctx):
     global bot_start
     embedonline = discord.Embed(description=f"Nene กำลังทำงาน", color=0x84c5e6)
     embedonline.set_footer(text='github : https://github.com/Jannnn1235/NENEbot')
     await ctx.channel.send(embed=embedonline)
 
-@bot.command() # =nensay
+@bot.command() # nenesay
 @commands.has_guild_permissions(administrator=True)
 async def nenesay(ctx,* ,message):
     embed = discord.Embed(description = message, color=0x2ECC71)
     await ctx.channel.send(embed=embed)
 
+@bot.command()
+@commands.has_guild_permissions(administrator=True)
+async def move(ctx, channel : discord.VoiceChannel):
+    try:
+        await ctx.member.disconnect()
+    except:
+        for members in ctx.author.voice.channel.members:
+            await members.move_to(None)
+            await ctx.send(f'move {members} to {channel}')
+
+''' @bot.command()
+@commands.has_guild_permissions(administrator=True)
+async def kickass(ctx):
+    file = discord.File("image/Thanos.gif")
+    await ctx.channel.send(file = file)
+    for members in ctx.author.voice.channel.members:    
+        await members.move_to(None)
+        await ctx.send(f'{members} was killed by Thanos.') '''
+
 bot.run(os.getenv("TOKEN"))
-#bot.run(config.APIBOT["TOKEN"])
 
 skyblue = 0x84c5e6
 yellow = 0xD4AC0D
