@@ -26,12 +26,41 @@ bot_start = datetime.today().strftime("%d/%m/%Y")
 
 bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents = discord.Intents().all())
 
+welcome_room = 882234093495017513
+
+github = "github : https://github.com/Jannnn1235/NENEbot"\
+
+blue = 0x84c5e6
+yellow = 0xD4AC0D
+green = 0x2ECC71
+red = 0xC70039
+
 @bot.event
 async def on_ready():
     print('{0.user}'.format(bot), 'is ready')
     print(bot_start)
     print("==================")
     await bot.change_presence(activity=discord.Game(name="n.help"))
+
+@bot.event
+async def on_member_join(member):
+    embed=discord.Embed(title=f"WELCOME TO {member.guild}" , color=green)
+    embed.add_field(name="ชื่อผู้ใช้", value=f"{member.name}", inline=False)
+    embed.add_field(name="เลขบัตรประจำตัว", value=f"{member.id}", inline=False)
+    embed.add_field(name="ที่อยู่ปัจจุบัน", value=f"{member.guild}", inline=True)
+    embed.set_thumbnail(url = member.avatar_url)
+    embed.set_footer(text=github)
+    await bot.get_channel(welcome_room).send(embed = embed)
+
+@bot.event
+async def on_member_remove(member):
+    embed=discord.Embed(title="GOOD BYE" , color=red)
+    embed.add_field(name="ชื่อผู้ใช้", value=f"{member.name}", inline=False)
+    embed.add_field(name="เลขบัตรประจำตัว", value=f"{member.id}", inline=False)
+    embed.add_field(name="ที่อยู่ปัจจุบัน", value=f"{member.guild}", inline=True)
+    embed.set_thumbnail(url = member.avatar_url)
+    embed.set_footer(text=github)
+    await bot.get_channel(welcome_room).send(embed = embed)
 
 @bot.event # USE FUNCTION
 async def on_message(message):  
@@ -80,7 +109,7 @@ async def removebg(filenames, message):
             await channel.send(file=file, content="ลบพื้นหลังเรียบร้อย (github : https://github.com/Jannnn1235/NENEbot)")         
     else:
         print("Error:", response.status_code, response.text)
-        embederror = discord.Embed(description=f"เดือนนี้ใช้งานเกินขีดจำกัดแล้ว Contact: <@297740667784921089>", color=0x84c5e6)
+        embederror = discord.Embed(description=f"เดือนนี้ใช้งานเกินขีดจำกัดแล้ว Contact: <@297740667784921089>", color=blue)
         embederror.set_footer(text='github : https://github.com/Jannnn1235/NENEbot')
         await message.channel.send(embed=embederror)
 
@@ -89,12 +118,6 @@ async def talk_with_bot(message):
     if 'เนเน่ด่า' in message.content:   
         randomrude = random.choice(rudeList.rude)
         await message.channel.send(randomrude)
-
-    if message.content.startswith('n.ด่า'):
-        await message.delete()
-    
-    if message.content.startswith('n.nenesay'):
-        await message.delete()
 
     if 'ตอนนี้กี่โมง' in message.content or 'ตอนนี้เวลา' in message.content:
         await message.channel.send(datetime.today().strftime("%H:%M"))
@@ -106,13 +129,13 @@ async def talk_with_bot(message):
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
         if error.retry_after >= 3600:
-            embeddelay = discord.Embed(description='**You need to wait {:.0f} hours'.format(error.retry_after/3600), color=0xC70039)
+            embeddelay = discord.Embed(description='**You need to wait {:.0f} hours'.format(error.retry_after/3600), color=red)
             await ctx.channel.send(embed=embeddelay, delete_after=5)
         elif error.retry_after >= 360:
-            embeddelay = discord.Embed(description='**You need to wait {:.0f} minutes'.format(error.retry_after/60), color=0xC70039)
+            embeddelay = discord.Embed(description='**You need to wait {:.0f} minutes'.format(error.retry_after/60), color=red)
             await ctx.channel.send(embed=embeddelay, delete_after=5)
         else:
-            embeddelay = discord.Embed(description='**You need to wait {:.0f} seconds'.format(error.retry_after), color=0xC70039)
+            embeddelay = discord.Embed(description='**You need to wait {:.0f} seconds'.format(error.retry_after), color=red)
             await ctx.channel.send(embed=embeddelay, delete_after=5)
 
 @bot.event
@@ -125,7 +148,7 @@ async def send_pic_in_room(message):
             q=f"{search}", cx="92f6c5f1da47c499a", searchType="image"        
         ).execute()
         url = result["items"][ran]["link"]
-        embed1 = discord.Embed(title=f"นี่คือรูป{search}", color=0x84c5e6)
+        embed1 = discord.Embed(title=f"นี่คือรูป{search}", color=blue)
         embed1.set_image(url=url)
         await message.channel.send(embed=embed1)
 
@@ -166,7 +189,7 @@ async def talk_bot(message):
             await message.channel.send(file = file)
 
     if message.content == 'n.help':
-        embed=discord.Embed(title="ช่วยเหลือ" , color=0x84c5e6)
+        embed=discord.Embed(title="ช่วยเหลือ" , color=blue)
         embed.add_field(name="คาบนี้", value="พิมพ์ในช่องแชท", inline=False)
         embed.add_field(name="คาบต่อไป", value="พิมพ์ในช่องแชท", inline=False)
         embed.add_field(name="ตารางเรียน", value="พิมพ์ในช่องแชท", inline=True)
@@ -183,7 +206,7 @@ async def clear(ctx, limit=5):
 @bot.command() # info
 @commands.cooldown(1,5,commands.BucketType.user)
 async def info(message):
-    embed=discord.Embed(title="บัตรประจำตัวประชาชน" , color=0x84c5e6)
+    embed=discord.Embed(title="บัตรประจำตัวประชาชน" , color=blue)
     embed.add_field(name="ชื่อผู้ใช้", value=f"{message.author.name}", inline=False)
     embed.add_field(name="เลขบัตรประจำตัว", value=f"{message.author.id}", inline=False)
     embed.add_field(name="ที่อยู่ปัจจุบัน", value=f"{message.author.guild}", inline=True)
@@ -191,12 +214,12 @@ async def info(message):
     embed.set_footer(text="github : https://github.com/Jannnn1235/NENEbot")
     await message.send(embed=embed)
     
-@bot.command() # ด่า
+@bot.command(aliases=['ด่า']) # rude
 @commands.cooldown(1,5,commands.BucketType.user)
-async def ด่า(message,*, who):
-    eiei = who
+async def rude(message,*, who):
+    who = who
     ranrude = random.choice(rudeList.rude)
-    await message.channel.send(f"{eiei} {ranrude}")
+    await message.channel.send(f"{who} {ranrude}")
 
 @bot.command() # send_dm
 @commands.has_role(int(os.getenv("role")))
@@ -208,7 +231,7 @@ async def send_dm(ctx, member:discord.Member, *, content):
 @bot.command() # reactrole
 @commands.has_guild_permissions(administrator=True)
 async def reactrole(ctx, emoji, role: discord.Role,*,message):
-    embed = discord.Embed(description = message, color=0x2ECC71)
+    embed = discord.Embed(description = message, color=green)
     msg = await ctx.channel.send(embed=embed)
     await msg.add_reaction(emoji)
 
@@ -230,14 +253,14 @@ async def reactrole(ctx, emoji, role: discord.Role,*,message):
 @bot.command() # online
 async def online(ctx):
     global bot_start
-    embedonline = discord.Embed(description=f"Nene กำลังทำงาน", color=0x84c5e6)
+    embedonline = discord.Embed(description=f"Nene กำลังทำงาน", color=blue)
     embedonline.set_footer(text='github : https://github.com/Jannnn1235/NENEbot')
     await ctx.channel.send(embed=embedonline)
 
 @bot.command() # nenesay
 @commands.has_guild_permissions(administrator=True)
 async def nenesay(ctx,* ,message):
-    embed = discord.Embed(description = message, color=0x2ECC71)
+    embed = discord.Embed(description = message, color=green)
     await ctx.channel.send(embed=embed)
 
 @bot.command()
@@ -261,25 +284,9 @@ async def show(ctx, search):
         q=f"{search}", cx="92f6c5f1da47c499a", searchType="image"        
     ).execute()
     url = result["items"][ran]["link"]
-    embed1 = discord.Embed(title=f"นี่คือรูป{search}", color=0x84c5e6)
+    embed1 = discord.Embed(title=f"นี่คือรูป{search}", color=blue)
 
     embed1.set_image(url=url)
     await ctx.send(embed=embed1)
 
-''' @bot.command()
-@commands.has_guild_permissions(administrator=True)
-async def kickass(ctx):
-    file = discord.File("image/Thanos.gif")
-    await ctx.channel.send(file = file)
-    for members in ctx.author.voice.channel.members:    
-        await members.move_to(None)
-        await ctx.send(f'{members} was killed by Thanos.') '''
-
 bot.run(os.getenv("TOKEN"))
-
-skyblue = 0x84c5e6
-yellow = 0xD4AC0D
-green = 0x2ECC71
-red = 0xC70039
-
-
