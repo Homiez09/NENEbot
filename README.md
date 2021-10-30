@@ -21,4 +21,3 @@ role =
 
 ```
 - [Remove background API](https://www.remove.bg/dashboard#api-key)
-
