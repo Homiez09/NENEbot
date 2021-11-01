@@ -37,7 +37,7 @@ red = 0xC70039
 
 @bot.event
 async def on_ready():
-    print('{0.user}'.format(bot), 'is ready')
+    print(f'{bot.user} พร้อมใช้งาน')
     print(bot_start)
     print("==================")
     await bot.change_presence(activity=discord.Game(name="n.help"))
@@ -90,7 +90,6 @@ async def pictureeiei(message):
             if any(attachment.filename.lower().endswith(image) for image in image_types):
                 await attachment.save(f"imageRM/{attachment.filename}")
                 await removebg(attachment.filename, message)
-                print('Img has Saved.')
 
 @bot.event
 async def removebg(filenames, message):
@@ -106,11 +105,11 @@ async def removebg(filenames, message):
             out.write(response.content)
             file = discord.File("imageRM/remove/NENE_BOT.png")
             channel = bot.get_channel(881090831119970314)
-            await channel.send(file=file, content="ลบพื้นหลังเรียบร้อย (github : https://github.com/Jannnn1235/NENEbot)")         
+            await channel.send(file=file, content=f"ลบพื้นหลังเรียบร้อย ({github})")         
     else:
-        print("Error:", response.status_code, response.text)
-        embederror = discord.Embed(description=f"เดือนนี้ใช้งานเกินขีดจำกัดแล้ว Contact: <@297740667784921089>", color=blue)
-        embederror.set_footer(text='github : https://github.com/Jannnn1235/NENEbot')
+        #print("Error:", response.status_code, response.text)
+        embederror = discord.Embed(description=f"เดือนนี้ใช้งานเกินขีดจำกัดแล้ว Contact: <@297740667784921089>", color=red)
+        embederror.set_footer(text=github)
         await message.channel.send(embed=embederror)
 
 @bot.event # TALK WITH BOT
@@ -157,7 +156,7 @@ async def talk_bot(message):
     day_today = str(date.today().strftime("%A"))
     time_start = date.today().strftime("%H:%M")  
 
-    def findX(time_start):
+    def findX():
         for i in range(11):
             if str(time_start) >= table.timestart['timestart'][i] and str(time_start) <= table.timestart['timestart'][i+1]:
                 return i
@@ -165,7 +164,7 @@ async def talk_bot(message):
                 return i
 
     if 'คาบ' in message.content:
-        x = findX(time_start)
+        x = findX()
         if 'คาบนี้' in message.content:  
             if day_today in table.day and x < 10:
                 await message.channel.send(f"{table.day[f'{day_today}'][x]} {table.timestart['timestart'][x]} - {table.timestart['timestart'][x+1]}")
@@ -194,7 +193,7 @@ async def talk_bot(message):
         embed.add_field(name="คาบต่อไป", value="พิมพ์ในช่องแชท", inline=False)
         embed.add_field(name="ตารางเรียน", value="พิมพ์ในช่องแชท", inline=True)
         embed.set_thumbnail(url = bot.user.avatar_url)
-        embed.set_footer(text="github : https://github.com/Jannnn1235/NENEbot")
+        embed.set_footer(text=github)
         await message.channel.send(embed=embed)
 
 @bot.command() # clear
