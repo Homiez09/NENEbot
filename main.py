@@ -183,9 +183,9 @@ async def talk_bot(message):
             else:
                 await message.channel.send("ไม่มีเรียนไอ้สัสเอ้ย อย่าติดตลก")
 
-        if 'ตารางเรียน' in message.content:   
-            file = discord.File("image/ตารางเรียน.jpg")
-            await message.channel.send(file = file)
+    if 'ตารางเรียน' in message.content:   
+        file = discord.File("image/ตารางเรียน.jpg")
+        await message.channel.send(file = file)
 
     if message.content == 'n.help':
         embed=discord.Embed(title="ช่วยเหลือ" , color=blue)
