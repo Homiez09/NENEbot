@@ -1,5 +1,5 @@
-# Made by Phumrapee Soenvanichakul (jannnn1235)
-# Github: https://github.com/Jannnn1235/NENEbot
+# Made by Phumrapee Soenvanichakul (Homiez09)
+# Github: https://github.com/Homiez09/NENEbot
 import random
 import discord
 import rudeList
@@ -28,7 +28,7 @@ bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents = discord.Intents
 
 welcome_room = 882234093495017513
 
-github = "github : https://github.com/Jannnn1235/NENEbot"\
+github = "github : https://github.com/Homiez09/NENEbot"
 
 blue = 0x84c5e6
 yellow = 0xD4AC0D
@@ -210,7 +210,7 @@ async def info(message):
     embed.add_field(name="เลขบัตรประจำตัว", value=f"{message.author.id}", inline=False)
     embed.add_field(name="ที่อยู่ปัจจุบัน", value=f"{message.author.guild}", inline=True)
     embed.set_thumbnail(url = message.author.avatar_url)
-    embed.set_footer(text="github : https://github.com/Jannnn1235/NENEbot")
+    embed.set_footer(text="github : https://github.com/Homiez09/NENEbot")
     await message.send(embed=embed)
     
 @bot.command(aliases=['ด่า']) # rude
@@ -253,7 +253,7 @@ async def reactrole(ctx, emoji, role: discord.Role,*,message):
 async def online(ctx):
     global bot_start
     embedonline = discord.Embed(description=f"Nene กำลังทำงาน", color=blue)
-    embedonline.set_footer(text='github : https://github.com/Jannnn1235/NENEbot')
+    embedonline.set_footer(text='github : https://github.com/Homiez09/NENEbot')
     await ctx.channel.send(embed=embedonline)
 
 @bot.command() # nenesay
