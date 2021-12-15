@@ -9,15 +9,24 @@
 ### Step to setup
 - create .env file
 ```.env
-TOKEN = 
+TOKEN = <Bot Token.>
 
-api_key = 
+api_key = <Search Image (optional)> 
 
-REBG = 
+SEARCHCH = <Set Id Search Channel. (optional)>
 
-PREFIX = 
+PREFIX = <Set your prefix>
 
-role = 
+role = <Set Admin role id>
+
+WELROOM = <Set Id Welcome Channel(What Channel you want to notify about user join/leave.)>
+
+REBG = <Api from https://www.remove.bg/dashboard#api-key (optional)>
+
+INPUTCH = <Set Id Input Channel. (optional)> 
+
+OUTPUTCH = <Set Id Output Channel.(optional)>
 
 ```
 - [Remove background API](https://www.remove.bg/dashboard#api-key)
+
