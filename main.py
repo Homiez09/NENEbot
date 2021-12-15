@@ -1,5 +1,5 @@
-# Made by Phumrapee Soenvanichakul (Homiez09)
-# Github: https://github.com/Homiez09/NENEbot
+# Made by Phumrapee Soenvanichakul (jannnn1235)
+# Github: https://github.com/Jannnn1235/NENEbot
 import random
 import discord
 import rudeList
@@ -26,9 +26,9 @@ bot_start = datetime.today().strftime("%d/%m/%Y")
 
 bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents = discord.Intents().all())
 
-welcome_room = 882234093495017513
+welcome_room = int(os.getenv("WELROOM"))
 
-github = "github : https://github.com/Homiez09/NENEbot"
+github = "github : https://github.com/Jannnn1235/NENEbot"\
 
 blue = 0x84c5e6
 yellow = 0xD4AC0D
@@ -44,22 +44,12 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    embed=discord.Embed(title=f"WELCOME TO {member.guild}" , color=green)
-    embed.add_field(name="ชื่อผู้ใช้", value=f"{member.name}", inline=False)
-    embed.add_field(name="เลขบัตรประจำตัว", value=f"{member.id}", inline=False)
-    embed.add_field(name="ที่อยู่ปัจจุบัน", value=f"{member.guild}", inline=True)
-    embed.set_thumbnail(url = member.avatar_url)
-    embed.set_footer(text=github)
+    embed=discord.Embed(description=f"{member.name} has joined." , color=green)
     await bot.get_channel(welcome_room).send(embed = embed)
 
 @bot.event
 async def on_member_remove(member):
-    embed=discord.Embed(title="GOOD BYE" , color=red)
-    embed.add_field(name="ชื่อผู้ใช้", value=f"{member.name}", inline=False)
-    embed.add_field(name="เลขบัตรประจำตัว", value=f"{member.id}", inline=False)
-    embed.add_field(name="ที่อยู่ปัจจุบัน", value=f"{member.guild}", inline=True)
-    embed.set_thumbnail(url = member.avatar_url)
-    embed.set_footer(text=github)
+    embed=discord.Embed(description=f"{member.name} has leaved." , color=red)
     await bot.get_channel(welcome_room).send(embed = embed)
 
 @bot.event # USE FUNCTION
@@ -85,7 +75,7 @@ async def on_raw_reaction_add(payload):
 image_types = ["png", "jpeg", "jpg"]
 @bot.event # USE FUNCTION
 async def pictureeiei(message):
-    if message.channel.id == 881090796319813642:
+    if message.channel.id == int(os.getenv("INPUTCH")):
         for attachment in message.attachments:
             if any(attachment.filename.lower().endswith(image) for image in image_types):
                 await attachment.save(f"imageRM/{attachment.filename}")
@@ -104,7 +94,7 @@ async def removebg(filenames, message):
         with open('imageRM/remove/NENE_BOT.png', 'wb') as out:
             out.write(response.content)
             file = discord.File("imageRM/remove/NENE_BOT.png")
-            channel = bot.get_channel(881090831119970314)
+            channel = bot.get_channel(int(os.getenv("OUTPUTCH")))
             await channel.send(file=file, content=f"ลบพื้นหลังเรียบร้อย ({github})")         
     else:
         #print("Error:", response.status_code, response.text)
@@ -140,7 +130,7 @@ async def on_command_error(ctx, error):
 @bot.event
 async def send_pic_in_room(message):
     search = message.content
-    if message.channel.id == 881107013239734275 and message.author.id != 874845208704061492:
+    if message.channel.id == int(os.getenv("SEARCHCH")) and message.author.id != bot.user.id:
         ran = random.randint(0, 9)
         resource = build("customsearch", "v1", developerKey=os.getenv("api_key")).cse()
         result = resource.list(
@@ -210,7 +200,7 @@ async def info(message):
     embed.add_field(name="เลขบัตรประจำตัว", value=f"{message.author.id}", inline=False)
     embed.add_field(name="ที่อยู่ปัจจุบัน", value=f"{message.author.guild}", inline=True)
     embed.set_thumbnail(url = message.author.avatar_url)
-    embed.set_footer(text="github : https://github.com/Homiez09/NENEbot")
+    embed.set_footer(text="github : https://github.com/Jannnn1235/NENEbot")
     await message.send(embed=embed)
     
 @bot.command(aliases=['ด่า']) # rude
@@ -253,7 +243,7 @@ async def reactrole(ctx, emoji, role: discord.Role,*,message):
 async def online(ctx):
     global bot_start
     embedonline = discord.Embed(description=f"Nene กำลังทำงาน", color=blue)
-    embedonline.set_footer(text='github : https://github.com/Homiez09/NENEbot')
+    embedonline.set_footer(text='github : https://github.com/Jannnn1235/NENEbot')
     await ctx.channel.send(embed=embedonline)
 
 @bot.command() # nenesay
