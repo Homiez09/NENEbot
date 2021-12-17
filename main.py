@@ -46,6 +46,8 @@ def randomQuote(mode):
         quote_sad = quoteList.sad
         ranq = random.choice(quote_sad)       
         return ranq
+    else: 
+        return "You try to type ```n.quote [love/sad]``` "
     
 @bot.event
 async def on_ready():
