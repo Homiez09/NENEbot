@@ -37,10 +37,15 @@ yellow = 0xD4AC0D
 green = 0x2ECC71
 red = 0xC70039
 
-quote_list = quoteList.love
-def randomQuote():
-    ranq = random.choice(quote_list)
-    return ranq
+def randomQuote(mode):
+    if mode == "love":
+        quote_love = quoteList.love
+        ranq = random.choice(quote_love)
+        return ranq
+    elif mode == "sad":
+        quote_sad = quoteList.sad
+        ranq = random.choice(quote_sad)       
+        return ranq
     
 @bot.event
 async def on_ready():
@@ -284,7 +289,7 @@ async def show(ctx, search):   # show picture
 
 @bot.command()
 @commands.cooldown(1,3,commands.BucketType.user)
-async def quote(ctx):
-    await ctx.send(randomQuote())
+async def quote(ctx, mode=None):
+    await ctx.send(randomQuote(mode))
 
 bot.run(os.getenv("TOKEN"))
