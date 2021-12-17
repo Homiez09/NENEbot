@@ -2,11 +2,13 @@
 # Github: https://github.com/Jannnn1235/NENEbot
 import random
 import discord
-import rudeList
 import json
 import requests
-import table
 import os
+
+import table
+import rudeList
+import quoteList
 
 from ntpath import join
 from re import purge
@@ -35,6 +37,11 @@ yellow = 0xD4AC0D
 green = 0x2ECC71
 red = 0xC70039
 
+quote_list = quoteList.love
+def randomQuote():
+    ranq = random.choice(quote_list)
+    return ranq
+    
 @bot.event
 async def on_ready():
     print(f'{bot.user} พร้อมใช้งาน')
@@ -95,11 +102,10 @@ async def removebg(filenames, message):
             out.write(response.content)
             file = discord.File("imageRM/remove/NENE_BOT.png")
             channel = bot.get_channel(int(os.getenv("OUTPUTCH")))
-            await channel.send(file=file, content=f"ลบพื้นหลังเรียบร้อย ({github})")         
+            await channel.send(file=file, content=f"ลบพื้นหลังเรียบร้อย")         
     else:
         #print("Error:", response.status_code, response.text)
         embederror = discord.Embed(description=f"เดือนนี้ใช้งานเกินขีดจำกัดแล้ว Contact: <@297740667784921089>", color=red)
-        embederror.set_footer(text=github)
         await message.channel.send(embed=embederror)
 
 @bot.event # TALK WITH BOT
@@ -183,7 +189,6 @@ async def talk_bot(message):
         embed.add_field(name="คาบต่อไป", value="พิมพ์ในช่องแชท", inline=False)
         embed.add_field(name="ตารางเรียน", value="พิมพ์ในช่องแชท", inline=True)
         embed.set_thumbnail(url = bot.user.avatar_url)
-        embed.set_footer(text=github)
         await message.channel.send(embed=embed)
 
 @bot.command() # clear
@@ -194,13 +199,12 @@ async def clear(ctx, limit=5):
 
 @bot.command() # info
 @commands.cooldown(1,5,commands.BucketType.user)
-async def info(message):
+async def myinfo(message):
     embed=discord.Embed(title="บัตรประจำตัวประชาชน" , color=blue)
     embed.add_field(name="ชื่อผู้ใช้", value=f"{message.author.name}", inline=False)
     embed.add_field(name="เลขบัตรประจำตัว", value=f"{message.author.id}", inline=False)
     embed.add_field(name="ที่อยู่ปัจจุบัน", value=f"{message.author.guild}", inline=True)
     embed.set_thumbnail(url = message.author.avatar_url)
-    embed.set_footer(text="github : https://github.com/Jannnn1235/NENEbot")
     await message.send(embed=embed)
     
 @bot.command(aliases=['ด่า']) # rude
@@ -210,7 +214,7 @@ async def rude(message,*, who):
     ranrude = random.choice(rudeList.rude)
     await message.channel.send(f"{who} {ranrude}")
 
-@bot.command() # send_dm
+@bot.command(aliases=['dm']) # send_dm
 @commands.has_role(int(os.getenv("role")))
 @commands.cooldown(1,3,commands.BucketType.user)
 async def send_dm(ctx, member:discord.Member, *, content):
@@ -239,7 +243,7 @@ async def reactrole(ctx, emoji, role: discord.Role,*,message):
     with open('reactrole.json', 'w') as f:
         json.dump(data,f ,indent=4)
 
-@bot.command() # online
+@bot.command(aliases=['github', 'info']) # online
 async def online(ctx):
     global bot_start
     embedonline = discord.Embed(description=f"Nene กำลังทำงาน", color=blue)
@@ -264,7 +268,7 @@ async def move(ctx, channel : discord.VoiceChannel):
 
 @bot.command()
 @commands.cooldown(1,3,commands.BucketType.user)
-async def show(ctx, search):           
+async def show(ctx, search):   # show picture        
     search = search
     print(search)
     ran = random.randint(0, 9)
@@ -277,5 +281,10 @@ async def show(ctx, search):
 
     embed1.set_image(url=url)
     await ctx.send(embed=embed1)
+
+@bot.command()
+@commands.cooldown(1,3,commands.BucketType.user)
+async def quote(ctx):
+    await ctx.send(randomQuote())
 
 bot.run(os.getenv("TOKEN"))
