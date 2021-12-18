@@ -1,5 +1,5 @@
-# Made by Phumrapee Soenvanichakul (jannnn1235)
-# Github: https://github.com/Jannnn1235/NENEbot
+# Made by Phumrapee Soenvanichakul (HomieZ09)
+# Github: https://github.com/Homiez09/NENEbot
 import random
 import discord
 import json
@@ -30,7 +30,7 @@ bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents = discord.Intents
 
 welcome_room = int(os.getenv("WELROOM"))
 
-github = "github : https://github.com/Jannnn1235/NENEbot"\
+github = "github : https://github.com/Homiez09/NENEbot"\
 
 blue = 0x84c5e6
 yellow = 0xD4AC0D
@@ -254,7 +254,7 @@ async def reactrole(ctx, emoji, role: discord.Role,*,message):
 async def online(ctx):
     global bot_start
     embedonline = discord.Embed(description=f"Nene กำลังทำงาน", color=blue)
-    embedonline.set_footer(text='github : https://github.com/Jannnn1235/NENEbot')
+    embedonline.set_footer(text=f'github : {github}')
     await ctx.channel.send(embed=embedonline)
 
 @bot.command() # nenesay
