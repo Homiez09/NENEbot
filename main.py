@@ -6,9 +6,7 @@ import json
 import requests
 import os
 
-import table
-import rudeList
-import quoteList
+import components as cp
 
 from ntpath import join
 from re import purge
@@ -39,11 +37,11 @@ red = 0xC70039
 
 def randomQuote(mode):
     if mode == "love":
-        quote_love = quoteList.love
+        quote_love = cp.quoteList["love"]
         ranq = random.choice(quote_love)
         return ranq
     elif mode == "sad":
-        quote_sad = quoteList.sad
+        quote_sad = cp.quoteList["sad"]
         ranq = random.choice(quote_sad)       
         return ranq
     else: 
@@ -118,7 +116,7 @@ async def removebg(filenames, message):
 @bot.event # TALK WITH BOT
 async def talk_with_bot(message):
     if 'เนเน่ด่า' in message.content:   
-        randomrude = random.choice(rudeList.rude)
+        randomrude = random.choice(cp.rude)
         await message.channel.send(randomrude)
 
     if 'ตอนนี้กี่โมง' in message.content or 'ตอนนี้เวลา' in message.content:
@@ -158,10 +156,12 @@ async def send_pic_in_room(message):
 async def talk_bot(message):    
     day_today = str(date.today().strftime("%A"))
     time_start = date.today().strftime("%H:%M")  
+    time = cp.table["timestart"]
+    day = cp.table["day"]
 
     def findX():
         for i in range(11):
-            if str(time_start) >= table.timestart['timestart'][i] and str(time_start) <= table.timestart['timestart'][i+1]:
+            if str(time_start) >= time[i] and str(time_start) <= time[i+1]:
                 return i
             elif i == 10:
                 return i
@@ -169,20 +169,20 @@ async def talk_bot(message):
     if 'คาบ' in message.content:
         x = findX()
         if 'คาบนี้' in message.content:  
-            if day_today in table.day and x < 10:
-                await message.channel.send(f"{table.day[f'{day_today}'][x]} {table.timestart['timestart'][x]} - {table.timestart['timestart'][x+1]}")
+            if day_today in day and x < 10:
+                await message.channel.send(f"{day[f'{day_today}'][x]} {time[x]} - {time[x+1]}")
             else:
                 await message.channel.send("ไม่มีเรียนไอ้สัสเอ้ย อย่าติดตลก")
 
         if 'คาบต่อไป' in message.content or 'คาบหน้า' in message.content:
-            if day_today in table.day and x < 9:
-                await message.channel.send(table.day[f"{day_today}"][x+1])
+            if day_today in day and x < 9:
+                await message.channel.send(day[f"{day_today}"][x+1])
             else:
                 await message.channel.send("ไม่มีเรียนไอ้สัสเอ้ย อย่าติดตลก")
         
         if 'คาบเมื่อกี้' in message.content or 'คาบที่แล้ว' in message.content:  
-            if day_today in table.day and x < 10:
-                await message.channel.send(table.day[f"{day_today}"][x-1])
+            if day_today in day and x < 10:
+                await message.channel.send(day[f"{day_today}"][x-1])
             else:
                 await message.channel.send("ไม่มีเรียนไอ้สัสเอ้ย อย่าติดตลก")
 
@@ -218,7 +218,7 @@ async def myinfo(message):
 @commands.cooldown(1,5,commands.BucketType.user)
 async def rude(message,*, who):
     who = who
-    ranrude = random.choice(rudeList.rude)
+    ranrude = random.choice(cp.rude)
     await message.channel.send(f"{who} {ranrude}")
 
 @bot.command(aliases=['dm']) # send_dm
