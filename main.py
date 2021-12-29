@@ -1,7 +1,7 @@
 # Made by Phumrapee Soenvanichakul (HomieZ09)
 # Github: https://github.com/Homiez09/NENEbot
 import random
-import discord
+import nextcord
 import json
 import requests
 import os
@@ -10,21 +10,21 @@ import components as cp
 
 from ntpath import join
 from re import purge
-from discord.ext import commands
+from nextcord.ext import commands
 from datetime import datetime
-from discord.ext.commands.core import command
+from nextcord.ext.commands.core import command
 from googleapiclient.discovery import build
-from discord.ext.commands import check
-from discord.ext.commands import has_permissions, MissingPermissions
+from nextcord.ext.commands import check
+from nextcord.ext.commands import has_permissions, MissingPermissions
 from datetime import datetime as date
 from dotenv import load_dotenv
-from discord.utils import get 
+from nextcord.utils import get 
 
 load_dotenv('.env')
 
 bot_start = datetime.today().strftime("%d/%m/%Y")
 
-bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents = discord.Intents().all())
+bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents = nextcord.Intents().all())
 
 welcome_room = int(os.getenv("WELROOM"))
 
@@ -52,21 +52,22 @@ async def on_ready():
     print(f'{bot.user} พร้อมใช้งาน')
     print(bot_start)
     print("==================")
-    await bot.change_presence(activity=discord.Game(name="n.help"))
+    await bot.get_channel(int(os.getenv("ADMINROOM"))).send(bot_start)
+    await bot.change_presence(activity=nextcord.Game(name=f"{os.getenv('PREFIX')}help"))
 
 @bot.event
 async def on_member_join(member):
-    embed=discord.Embed(description=f"{member.name} has joined." , color=green)
+    embed=nextcord.Embed(description=f"{member.name} has joined." , color=green)
     await bot.get_channel(welcome_room).send(embed = embed)
 
 @bot.event
 async def on_member_remove(member):
-    embed=discord.Embed(description=f"{member.name} has leaved." , color=red)
+    embed=nextcord.Embed(description=f"{member.name} has leaved." , color=red)
     await bot.get_channel(welcome_room).send(embed = embed)
 
 @bot.event # USE FUNCTION
 async def on_message(message):  
-    await talk_with_bot(message) # TALK WITH BOT
+    await talk_with_bot(message)
     await pictureeiei(message)
     await send_pic_in_room(message)
     await talk_bot(message)
@@ -81,7 +82,7 @@ async def on_raw_reaction_add(payload):
             data = json.load(f)
             for x in data:
                 if x['emoji'] == payload.emoji.name and x['message_id'] == payload.message_id:
-                    role = discord.utils.get(bot.get_guild(payload.guild_id).roles, id=x["role_id"])
+                    role = nextcord.utils.get(bot.get_guild(payload.guild_id).roles, id=x["role_id"])
                     await payload.member.add_roles(role)
 
 image_types = ["png", "jpeg", "jpg"]
@@ -105,12 +106,11 @@ async def removebg(filenames, message):
     if response.status_code == requests.codes.ok:
         with open('imageRM/remove/NENE_BOT.png', 'wb') as out:
             out.write(response.content)
-            file = discord.File("imageRM/remove/NENE_BOT.png")
+            file = nextcord.File("imageRM/remove/NENE_BOT.png")
             channel = bot.get_channel(int(os.getenv("OUTPUTCH")))
             await channel.send(file=file, content=f"ลบพื้นหลังเรียบร้อย")         
     else:
-        #print("Error:", response.status_code, response.text)
-        embederror = discord.Embed(description=f"เดือนนี้ใช้งานเกินขีดจำกัดแล้ว Contact: <@297740667784921089>", color=red)
+        embederror = nextcord.Embed(description=f"เดือนนี้ใช้งานเกินขีดจำกัดแล้ว Contact: <@297740667784921089>", color=red)
         await message.channel.send(embed=embederror)
 
 @bot.event # TALK WITH BOT
@@ -119,23 +119,17 @@ async def talk_with_bot(message):
         randomrude = random.choice(cp.rude)
         await message.channel.send(randomrude)
 
-    if 'ตอนนี้กี่โมง' in message.content or 'ตอนนี้เวลา' in message.content:
-        await message.channel.send(datetime.today().strftime("%H:%M"))
-
-    if 'วันนี้วันที่' in message.content:
-        await message.channel.send(datetime.today().strftime("%d/%m/%Y"))
-
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
         if error.retry_after >= 3600:
-            embeddelay = discord.Embed(description='**You need to wait {:.0f} hours'.format(error.retry_after/3600), color=red)
+            embeddelay = nextcord.Embed(description='**You need to wait {:.0f} hours'.format(error.retry_after/3600), color=red)
             await ctx.channel.send(embed=embeddelay, delete_after=5)
         elif error.retry_after >= 360:
-            embeddelay = discord.Embed(description='**You need to wait {:.0f} minutes'.format(error.retry_after/60), color=red)
+            embeddelay = nextcord.Embed(description='**You need to wait {:.0f} minutes'.format(error.retry_after/60), color=red)
             await ctx.channel.send(embed=embeddelay, delete_after=5)
         else:
-            embeddelay = discord.Embed(description='**You need to wait {:.0f} seconds'.format(error.retry_after), color=red)
+            embeddelay = nextcord.Embed(description='**You need to wait {:.0f} seconds'.format(error.retry_after), color=red)
             await ctx.channel.send(embed=embeddelay, delete_after=5)
 
 @bot.event
@@ -148,54 +142,54 @@ async def send_pic_in_room(message):
             q=f"{search}", cx="92f6c5f1da47c499a", searchType="image"        
         ).execute()
         url = result["items"][ran]["link"]
-        embed1 = discord.Embed(title=f"นี่คือรูป{search}", color=blue)
+        embed1 = nextcord.Embed(title=f"นี่คือรูป{search}", color=blue)
         embed1.set_image(url=url)
         await message.channel.send(embed=embed1)
 
 @bot.event
 async def talk_bot(message):    
+    def findX():
+        for i in range(len(time)): # len 11 i_max = 10
+            if i == 10:
+                return i
+            elif time_start > time[i] and time_start < time[i+1]:
+                return i
+
     day_today = str(date.today().strftime("%A"))
     time_start = date.today().strftime("%H:%M")  
-    time = cp.table["timestart"]
+    time_start = str(time_start)
+    time = cp.table["timestart"] 
     day = cp.table["day"]
-
-    def findX():
-        for i in range(11):
-            if str(time_start) >= time[i] and str(time_start) <= time[i+1]:
-                return i
-            elif i == 10:
-                return i
-
-    if 'คาบ' in message.content:
-        x = findX()
-        if 'คาบนี้' in message.content:  
-            if day_today in day and x < 10:
-                await message.channel.send(f"{day[f'{day_today}'][x]} {time[x]} - {time[x+1]}")
-            else:
-                await message.channel.send("ไม่มีเรียนไอ้สัสเอ้ย อย่าติดตลก")
-
-        if 'คาบต่อไป' in message.content or 'คาบหน้า' in message.content:
-            if day_today in day and x < 9:
-                await message.channel.send(day[f"{day_today}"][x+1])
-            else:
-                await message.channel.send("ไม่มีเรียนไอ้สัสเอ้ย อย่าติดตลก")
-        
-        if 'คาบเมื่อกี้' in message.content or 'คาบที่แล้ว' in message.content:  
-            if day_today in day and x < 10:
-                await message.channel.send(day[f"{day_today}"][x-1])
-            else:
-                await message.channel.send("ไม่มีเรียนไอ้สัสเอ้ย อย่าติดตลก")
+    x = findX()
+                
+    if "คาบนี้" in message.content:
+        if day_today in day and x < 10:
+            await message.channel.send(f"{day[f'{day_today}'][x]} {time[x]} - {time[x+1]}")
+        else:
+                await message.channel.send("ไม่มีเรียนไอ้สัสเอ้ย อย่าติดตลก") 
+                    
+    if "คาบต่อไป" in message.content or "คาบหน้า" in message.content:
+        if day_today in day and x < 9:
+            await message.channel.send(day[f"{day_today}"][x+1])
+        else:
+            await message.channel.send("ไม่มีเรียนไอ้สัสเอ้ย อย่าติดตลก")    
+            
+    if "คาบที่แล้ว" in message.content or "คาบเมื่อกี้" in message.content:
+        if day_today in day and x > 0 and x < 10:
+            await message.channel.send(day[f"{day_today}"][x-1])
+        else:
+            await message.channel.send("ไม่มีเรียนไอ้สัสเอ้ย อย่าติดตลก")   
 
     if 'ตารางเรียน' in message.content:   
-        file = discord.File("image/ตารางเรียน.jpg")
+        file = nextcord.File("image/ตารางเรียน.jpg")
         await message.channel.send(file = file)
 
     if message.content == 'n.help':
-        embed=discord.Embed(title="ช่วยเหลือ" , color=blue)
+        embed=nextcord.Embed(title="ช่วยเหลือ" , color=blue)
         embed.add_field(name="คาบนี้", value="พิมพ์ในช่องแชท", inline=False)
         embed.add_field(name="คาบต่อไป", value="พิมพ์ในช่องแชท", inline=False)
         embed.add_field(name="ตารางเรียน", value="พิมพ์ในช่องแชท", inline=True)
-        embed.set_thumbnail(url = bot.user.avatar_url)
+        embed.set_thumbnail(url = bot.user.display_avatar.url)
         await message.channel.send(embed=embed)
 
 @bot.command() # clear
@@ -207,11 +201,11 @@ async def clear(ctx, limit=5):
 @bot.command() # info
 @commands.cooldown(1,5,commands.BucketType.user)
 async def myinfo(message):
-    embed=discord.Embed(title="บัตรประจำตัวประชาชน" , color=blue)
+    embed=nextcord.Embed(title="บัตรประจำตัวประชาชน" , color=blue)
     embed.add_field(name="ชื่อผู้ใช้", value=f"{message.author.name}", inline=False)
     embed.add_field(name="เลขบัตรประจำตัว", value=f"{message.author.id}", inline=False)
     embed.add_field(name="ที่อยู่ปัจจุบัน", value=f"{message.author.guild}", inline=True)
-    embed.set_thumbnail(url = message.author.avatar_url)
+    embed.set_thumbnail(url = message.author.display_avatar.url)
     await message.send(embed=embed)
     
 @bot.command(aliases=['ด่า']) # rude
@@ -224,14 +218,14 @@ async def rude(message,*, who):
 @bot.command(aliases=['dm']) # send_dm
 @commands.has_role(int(os.getenv("role")))
 @commands.cooldown(1,3,commands.BucketType.user)
-async def send_dm(ctx, member:discord.Member, *, content):
+async def send_dm(ctx, member:nextcord.Member, *, content):
     channel = await member.create_dm()
     await channel.send(content)
 
 @bot.command() # reactrole
 @commands.has_guild_permissions(administrator=True)
-async def reactrole(ctx, emoji, role: discord.Role,*,message):
-    embed = discord.Embed(description = message, color=green)
+async def reactrole(ctx, emoji, role: nextcord.Role,*,message):
+    embed = nextcord.Embed(description = message, color=green)
     msg = await ctx.channel.send(embed=embed)
     await msg.add_reaction(emoji)
 
@@ -250,28 +244,36 @@ async def reactrole(ctx, emoji, role: discord.Role,*,message):
     with open('reactrole.json', 'w') as f:
         json.dump(data,f ,indent=4)
 
-@bot.command(aliases=['github', 'info']) # online
-async def online(ctx):
-    global bot_start
-    embedonline = discord.Embed(description=f"Nene กำลังทำงาน", color=blue)
-    embedonline.set_footer(text=f'github : {github}')
-    await ctx.channel.send(embed=embedonline)
-
 @bot.command() # nenesay
 @commands.has_guild_permissions(administrator=True)
 async def nenesay(ctx,* ,message):
-    embed = discord.Embed(description = message, color=green)
+    embed = nextcord.Embed(description = message, color=green)
     await ctx.channel.send(embed=embed)
 
 @bot.command()
 @commands.has_guild_permissions(administrator=True)
-async def move(ctx, channel : discord.VoiceChannel):
-    try:
-        await ctx.member.disconnect()
+async def move(ctx, channel : nextcord.VoiceChannel):
+    try:    
+        for members in ctx.author.voice.channel.members:
+            embed = nextcord.Embed(description=f'Move {members} to {channel}', color=green)
+            await members.move_to(channel)
+            await ctx.send(embed = embed)
     except:
+        embed = nextcord.Embed(description='Something Went Wrong!!', color=green)
+        await ctx.send(embed=embed)
+
+@bot.command()
+@commands.has_guild_permissions(administrator=True)
+async def snap(ctx):
+    try:    
         for members in ctx.author.voice.channel.members:
             await members.move_to(None)
-            await ctx.send(f'move {members} to {channel}')
+            await ctx.send("https://cdn.discordapp.com/attachments/875313424601612318/925727431644561499/Thanos.gif")
+            await ctx.send(f"{members.mention} was slain by Thanos, for the good of the Universe.")
+    except:
+        embed = nextcord.Embed(description='Something Went Wrong!!', color=green)
+        await ctx.send(embed=embed)
+        
 
 @bot.command()
 @commands.cooldown(1,3,commands.BucketType.user)
@@ -284,14 +286,36 @@ async def show(ctx, search):   # show picture
         q=f"{search}", cx="92f6c5f1da47c499a", searchType="image"        
     ).execute()
     url = result["items"][ran]["link"]
-    embed1 = discord.Embed(title=f"นี่คือรูป{search}", color=blue)
+    embed1 = nextcord.Embed(title=f"นี่คือรูป{search}", color=blue)
 
     embed1.set_image(url=url)
     await ctx.send(embed=embed1)
 
-@bot.command()
+def randomQuote(mode):
+    return random.choice(cp.quoteList[f'{mode}'])
+
+class QuoteButton(nextcord.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.value = None
+        
+    @nextcord.ui.button(label="Love 💖", style=nextcord.ButtonStyle.success)
+    async def love(self, button, interaction):
+        await interaction.response.send_message(randomQuote("love"))
+        self.value = "love"
+        self.stop()
+    @nextcord.ui.button(label="Sad 😭", style=nextcord.ButtonStyle.success)
+    async def sad(self, button, interaction):
+        await interaction.response.send_message(randomQuote("sad")) 
+        self.value = "sad"
+        self.stop()
+
+@bot.command(aliases=['q'])
 @commands.cooldown(1,3,commands.BucketType.user)
-async def quote(ctx, mode=None):
-    await ctx.send(randomQuote(mode))
+async def quote(ctx): # quote
+    view = QuoteButton()
+    embed = nextcord.Embed(description="กดปุ่มเพื่อเลือก | Which one?", color=blue)
+    await ctx.send(embed=embed, view=view)
+    await view.wait()
 
 bot.run(os.getenv("TOKEN"))
