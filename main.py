@@ -184,14 +184,6 @@ async def talk_bot(message):
         file = nextcord.File("image/ตารางเรียน.jpg")
         await message.channel.send(file = file)
 
-    if message.content == 'n.help':
-        embed=nextcord.Embed(title="ช่วยเหลือ" , color=blue)
-        embed.add_field(name="คาบนี้", value="พิมพ์ในช่องแชท", inline=False)
-        embed.add_field(name="คาบต่อไป", value="พิมพ์ในช่องแชท", inline=False)
-        embed.add_field(name="ตารางเรียน", value="พิมพ์ในช่องแชท", inline=True)
-        embed.set_thumbnail(url = bot.user.display_avatar.url)
-        await message.channel.send(embed=embed)
-
 @bot.command() # clear
 @commands.has_guild_permissions(administrator=True)
 @commands.cooldown(1,3,commands.BucketType.user)
