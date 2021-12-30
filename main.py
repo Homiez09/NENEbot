@@ -154,21 +154,23 @@ async def talk_bot(message):
     time_start = str(time_start)
     time = cp.table["timestart"] 
     day = cp.table["day"]
-    x = findX()
                 
     if "คาบนี้" in message.content:
+        x = findX()
         if day_today in day and x < 10:
             await message.channel.send(f"{day[f'{day_today}'][x]} {time[x]} - {time[x+1]}")
         else:
                 await message.channel.send("ไม่มีเรียนไอ้สัสเอ้ย อย่าติดตลก") 
                     
     if "คาบต่อไป" in message.content or "คาบหน้า" in message.content:
+        x = findX()
         if day_today in day and x < 9:
             await message.channel.send(day[f"{day_today}"][x+1])
         else:
             await message.channel.send("ไม่มีเรียนไอ้สัสเอ้ย อย่าติดตลก")    
             
     if "คาบที่แล้ว" in message.content or "คาบเมื่อกี้" in message.content:
+        x = findX()
         if day_today in day and x > 0 and x < 10:
             await message.channel.send(day[f"{day_today}"][x-1])
         else:
@@ -237,19 +239,19 @@ async def move(ctx, channel : nextcord.VoiceChannel):
             await members.move_to(channel)
             await ctx.send(embed = embed)
     except:
-        embed = nextcord.Embed(description='Something Went Wrong!!', color=green)
+        embed = nextcord.Embed(description='Something Went Wrong!!', color=red)
         await ctx.send(embed=embed)
 
 @bot.command()
 @commands.has_guild_permissions(administrator=True)
 async def snap(ctx):
     try:    
+        await ctx.send("https://cdn.discordapp.com/attachments/875313424601612318/925727431644561499/Thanos.gif")
         for members in ctx.author.voice.channel.members:
             await members.move_to(None)
-            await ctx.send("https://cdn.discordapp.com/attachments/875313424601612318/925727431644561499/Thanos.gif")
             await ctx.send(f"{members.mention} was slain by Thanos, for the good of the Universe.")
     except:
-        embed = nextcord.Embed(description='Something Went Wrong!!', color=green)
+        embed = nextcord.Embed(description='Something Went Wrong!!', color=red)
         await ctx.send(embed=embed)
         
 
