@@ -27,6 +27,8 @@ INPUTCH = <Set Id Input Channel. (optional)>
 
 OUTPUTCH = <Set Id Output Channel.(optional)>
 
+ADMINROOM = <Set Id Admin Channel.>
+
 ```
 - [Remove background API](https://www.remove.bg/dashboard#api-key)
 
