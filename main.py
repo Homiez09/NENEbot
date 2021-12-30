@@ -207,13 +207,6 @@ async def rude(message,*, who):
     ranrude = random.choice(cp.rude)
     await message.channel.send(f"{who} {ranrude}")
 
-@bot.command(aliases=['dm']) # send_dm
-@commands.has_role(int(os.getenv("role")))
-@commands.cooldown(1,3,commands.BucketType.user)
-async def send_dm(ctx, member:nextcord.Member, *, content):
-    channel = await member.create_dm()
-    await channel.send(content)
-
 @bot.command() # reactrole
 @commands.has_guild_permissions(administrator=True)
 async def reactrole(ctx, emoji, role: nextcord.Role,*,message):
