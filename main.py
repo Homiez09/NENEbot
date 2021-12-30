@@ -8,17 +8,11 @@ import os
 
 import components as cp
 
-from ntpath import join
-from re import purge
 from nextcord.ext import commands
 from datetime import datetime
-from nextcord.ext.commands.core import command
 from googleapiclient.discovery import build
-from nextcord.ext.commands import check
-from nextcord.ext.commands import has_permissions, MissingPermissions
 from datetime import datetime as date
 from dotenv import load_dotenv
-from nextcord.utils import get 
 
 load_dotenv('.env')
 
@@ -203,7 +197,6 @@ async def myinfo(message):
 @bot.command(aliases=['ด่า']) # rude
 @commands.cooldown(1,5,commands.BucketType.user)
 async def rude(message,*, who):
-    who = who
     ranrude = random.choice(cp.rude)
     await message.channel.send(f"{who} {ranrude}")
 

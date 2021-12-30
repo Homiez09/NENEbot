@@ -1,6 +1,4 @@
 nextcord
-join
-purge
 build
 google-api-python-client
 datetime
