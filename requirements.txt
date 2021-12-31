@@ -1,7 +1,7 @@
-nextcord=2.0.0a4
-build=0.7.0
-google-api-python-client=2.33.0
-datetime=4.3
-requests=2.25.1
-python-dotenv=0.19.2
-pynacl=1.4.0
+nextcord==2.0.0a4
+build==0.7.0
+google-api-python-client==2.33.0
+datetime==4.3
+requests==2.25.1
+python-dotenv==0.19.2
+pynacl==1.4.0
