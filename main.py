@@ -30,7 +30,7 @@ async def on_ready():
     print('{0.user}'.format(bot), 'is ready')
     print(bot_start)
     print("==================")
-    await bot.change_presence(activity=nextcord.Game(name="Binance"))
+    await bot.change_presence(activity=nextcord.Game(name="Something"))
 
 for folder in os.listdir("events"):
     if os.path.exists(os.path.join("events", folder, "cog.py")):
