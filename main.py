@@ -21,16 +21,16 @@ bot_start = datetime.today().strftime("%d/%m/%Y")
 bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents = nextcord.Intents().all())
 
 welcome_room = int(os.getenv("WELROOM"))
-ADMINROOM = int(os.getenv("ADMINROOM"))
 
 github = "github : https://github.com/Homiez09/NENEbot"\
 
 @bot.event
 async def on_ready():
-    print('{0.user}'.format(bot), 'is ready')
+    print(f'{bot.user} is ready')
     print(bot_start)
     print("==================")
-    await bot.change_presence(activity=nextcord.Game(name="Something"))
+    await bot.get_channel(int(os.getenv("ADMINROOM"))).send(bot_start)
+    await bot.change_presence(activity=nextcord.Game(name=f"{os.getenv('PREFIX')}help"))
 
 for folder in os.listdir("events"):
     if os.path.exists(os.path.join("events", folder, "cog.py")):
