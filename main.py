@@ -21,6 +21,7 @@ bot_start = datetime.today().strftime("%d/%m/%Y")
 bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents = nextcord.Intents().all())
 
 welcome_room = int(os.getenv("WELROOM"))
+ADMINROOM = int(os.getenv("ADMINROOM"))
 
 github = "github : https://github.com/Homiez09/NENEbot"\
 
@@ -28,7 +29,7 @@ async def on_ready():
     print(f'{bot.user} พร้อมใช้งาน')
     print(bot_start)
     print("==================")
-    await bot.get_channel(int(os.getenv("ADMINROOM"))).send(bot_start)
+    await bot.get_channel(ADMINROOM).send(bot_start)
     await bot.change_presence(activity=nextcord.Game(name="Rov"))
 
 for folder in os.listdir("events"):
