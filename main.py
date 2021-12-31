@@ -26,11 +26,10 @@ ADMINROOM = int(os.getenv("ADMINROOM"))
 github = "github : https://github.com/Homiez09/NENEbot"\
 
 async def on_ready():
-    print(f'{bot.user} พร้อมใช้งาน')
+    print('{0.user}'.format(bot), 'is ready')
     print(bot_start)
     print("==================")
-    await bot.get_channel(ADMINROOM).send(bot_start)
-    await bot.change_presence(activity=nextcord.Game(name="Rov"))
+    await bot.change_presence(activity=nextcord.Game(name="Binance"))
 
 for folder in os.listdir("events"):
     if os.path.exists(os.path.join("events", folder, "cog.py")):
