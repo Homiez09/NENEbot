@@ -25,6 +25,7 @@ ADMINROOM = int(os.getenv("ADMINROOM"))
 
 github = "github : https://github.com/Homiez09/NENEbot"\
 
+@bot.event
 async def on_ready():
     print('{0.user}'.format(bot), 'is ready')
     print(bot_start)
