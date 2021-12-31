@@ -24,6 +24,13 @@ welcome_room = int(os.getenv("WELROOM"))
 
 github = "github : https://github.com/Homiez09/NENEbot"\
 
+async def on_ready():
+    print(f'{bot.user} พร้อมใช้งาน')
+    print(bot_start)
+    print("==================")
+    await bot.get_channel(int(os.getenv("ADMINROOM"))).send(bot_start)
+    await bot.change_presence(activity=nextcord.Game(name="Rov"))
+
 for folder in os.listdir("events"):
     if os.path.exists(os.path.join("events", folder, "cog.py")):
         bot.load_extension(f"events.{folder}.cog")
