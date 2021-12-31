@@ -1,4 +1,4 @@
-# Made by Phumrapee Soenvanichakul (HomieZ09)
+# Made by Phumrapee Soenvanichakul (Homiez09)
 # Github: https://github.com/Homiez09/NENEbot
 import random
 import nextcord
@@ -24,40 +24,17 @@ welcome_room = int(os.getenv("WELROOM"))
 
 github = "github : https://github.com/Homiez09/NENEbot"\
 
-blue = 0x84c5e6
-yellow = 0xD4AC0D
-green = 0x2ECC71
-red = 0xC70039
+for folder in os.listdir("events"):
+    if os.path.exists(os.path.join("events", folder, "cog.py")):
+        bot.load_extension(f"events.{folder}.cog")
 
-def randomQuote(mode):
-    if mode == "love":
-        quote_love = cp.quoteList["love"]
-        ranq = random.choice(quote_love)
-        return ranq
-    elif mode == "sad":
-        quote_sad = cp.quoteList["sad"]
-        ranq = random.choice(quote_sad)       
-        return ranq
-    else: 
-        return "```>> n.quote [love/sad]``` "
-    
-@bot.event
-async def on_ready():
-    print(f'{bot.user} พร้อมใช้งาน')
-    print(bot_start)
-    print("==================")
-    await bot.get_channel(int(os.getenv("ADMINROOM"))).send(bot_start)
-    await bot.change_presence(activity=nextcord.Game(name=f"{os.getenv('PREFIX')}help"))
+for folder in os.listdir("commands/user"):
+    if os.path.exists(os.path.join("commands/user", folder, "cog.py")):
+        bot.load_extension(f"commands.user.{folder}.cog")
 
-@bot.event
-async def on_member_join(member):
-    embed=nextcord.Embed(description=f"{member.name} has joined." , color=green)
-    await bot.get_channel(welcome_room).send(embed = embed)
-
-@bot.event
-async def on_member_remove(member):
-    embed=nextcord.Embed(description=f"{member.name} has leaved." , color=red)
-    await bot.get_channel(welcome_room).send(embed = embed)
+for folder in os.listdir("commands/admin"):
+    if os.path.exists(os.path.join("commands/admin", folder, "cog.py")):
+        bot.load_extension(f"commands.admin.{folder}.cog")
 
 @bot.event # USE FUNCTION
 async def on_message(message):  
@@ -104,7 +81,7 @@ async def removebg(filenames, message):
             channel = bot.get_channel(int(os.getenv("OUTPUTCH")))
             await channel.send(file=file, content=f"ลบพื้นหลังเรียบร้อย")         
     else:
-        embederror = nextcord.Embed(description=f"เดือนนี้ใช้งานเกินขีดจำกัดแล้ว Contact: <@297740667784921089>", color=red)
+        embederror = nextcord.Embed(description=f"เดือนนี้ใช้งานเกินขีดจำกัดแล้ว Contact: <@297740667784921089>", color=cp.color["red"])
         await message.channel.send(embed=embederror)
 
 @bot.event # TALK WITH BOT
@@ -117,13 +94,13 @@ async def talk_with_bot(message):
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
         if error.retry_after >= 3600:
-            embeddelay = nextcord.Embed(description='**You need to wait {:.0f} hours'.format(error.retry_after/3600), color=red)
+            embeddelay = nextcord.Embed(description='**You need to wait {:.0f} hours'.format(error.retry_after/3600), color=cp.color["red"])
             await ctx.channel.send(embed=embeddelay, delete_after=5)
         elif error.retry_after >= 360:
-            embeddelay = nextcord.Embed(description='**You need to wait {:.0f} minutes'.format(error.retry_after/60), color=red)
+            embeddelay = nextcord.Embed(description='**You need to wait {:.0f} minutes'.format(error.retry_after/60), color=cp.color["red"])
             await ctx.channel.send(embed=embeddelay, delete_after=5)
         else:
-            embeddelay = nextcord.Embed(description='**You need to wait {:.0f} seconds'.format(error.retry_after), color=red)
+            embeddelay = nextcord.Embed(description='**You need to wait {:.0f} seconds'.format(error.retry_after), color=cp.color["red"])
             await ctx.channel.send(embed=embeddelay, delete_after=5)
 
 @bot.event
@@ -136,7 +113,7 @@ async def send_pic_in_room(message):
             q=f"{search}", cx="92f6c5f1da47c499a", searchType="image"        
         ).execute()
         url = result["items"][ran]["link"]
-        embed1 = nextcord.Embed(title=f"นี่คือรูป{search}", color=blue)
+        embed1 = nextcord.Embed(title=f"นี่คือรูป{search}", color=cp.color["blue"])
         embed1.set_image(url=url)
         await message.channel.send(embed=embed1)
 
@@ -179,123 +156,5 @@ async def talk_bot(message):
     if 'ตารางเรียน' in message.content:   
         file = nextcord.File("image/ตารางเรียน.jpg")
         await message.channel.send(file = file)
-
-@bot.command() # clear
-@commands.has_guild_permissions(administrator=True)
-@commands.cooldown(1,3,commands.BucketType.user)
-async def clear(ctx, limit=5):
-    await ctx.channel.purge(limit=limit+1)
-
-@bot.command() # info
-@commands.cooldown(1,5,commands.BucketType.user)
-async def myinfo(message):
-    embed=nextcord.Embed(title="บัตรประจำตัวประชาชน" , color=blue)
-    embed.add_field(name="ชื่อผู้ใช้", value=f"{message.author.name}", inline=False)
-    embed.add_field(name="เลขบัตรประจำตัว", value=f"{message.author.id}", inline=False)
-    embed.add_field(name="ที่อยู่ปัจจุบัน", value=f"{message.author.guild}", inline=True)
-    embed.set_thumbnail(url = message.author.display_avatar.url)
-    await message.send(embed=embed)
-    
-@bot.command(aliases=['ด่า']) # rude
-@commands.cooldown(1,5,commands.BucketType.user)
-async def rude(message,*, who):
-    ranrude = random.choice(cp.rude)
-    await message.channel.send(f"{who} {ranrude}")
-
-@bot.command() # reactrole
-@commands.has_guild_permissions(administrator=True)
-async def reactrole(ctx, emoji, role: nextcord.Role,*,message):
-    embed = nextcord.Embed(description = message, color=green)
-    msg = await ctx.channel.send(embed=embed)
-    await msg.add_reaction(emoji)
-
-    with open('reactrole.json') as f:
-        data = json.load(f)
-
-        new_react_role = {
-            'role_name':role.name,
-            'role_id':role.id,
-            'emoji':emoji,
-            'message_id': msg.id
-        }
-
-        data.append(new_react_role)
-
-    with open('reactrole.json', 'w') as f:
-        json.dump(data,f ,indent=4)
-
-@bot.command() # nenesay
-@commands.has_guild_permissions(administrator=True)
-async def nenesay(ctx,* ,message):
-    embed = nextcord.Embed(description = message, color=green)
-    await ctx.channel.send(embed=embed)
-
-@bot.command()
-@commands.has_guild_permissions(administrator=True)
-async def move(ctx, channel : nextcord.VoiceChannel):
-    try:    
-        for members in ctx.author.voice.channel.members:
-            embed = nextcord.Embed(description=f'Move {members} to {channel}', color=green)
-            await members.move_to(channel)
-            await ctx.send(embed = embed)
-    except:
-        embed = nextcord.Embed(description='Something Went Wrong!!', color=red)
-        await ctx.send(embed=embed)
-
-@bot.command()
-@commands.has_guild_permissions(administrator=True)
-async def snap(ctx):
-    try:    
-        await ctx.send("https://cdn.discordapp.com/attachments/875313424601612318/925727431644561499/Thanos.gif")
-        for members in ctx.author.voice.channel.members:
-            await members.move_to(None)
-            await ctx.send(f"{members.mention} was slain by Thanos, for the good of the Universe.")
-    except:
-        embed = nextcord.Embed(description='Something Went Wrong!!', color=red)
-        await ctx.send(embed=embed)
-        
-
-@bot.command()
-@commands.cooldown(1,3,commands.BucketType.user)
-async def show(ctx, search):   # show picture        
-    search = search
-    print(search)
-    ran = random.randint(0, 9)
-    resource = build("customsearch", "v1", developerKey=os.getenv("api_key")).cse()
-    result = resource.list(
-        q=f"{search}", cx="92f6c5f1da47c499a", searchType="image"        
-    ).execute()
-    url = result["items"][ran]["link"]
-    embed1 = nextcord.Embed(title=f"นี่คือรูป{search}", color=blue)
-
-    embed1.set_image(url=url)
-    await ctx.send(embed=embed1)
-
-def randomQuote(mode):
-    return random.choice(cp.quoteList[f'{mode}'])
-
-class QuoteButton(nextcord.ui.View):
-    def __init__(self):
-        super().__init__()
-        self.value = None
-        
-    @nextcord.ui.button(label="Love 💖", style=nextcord.ButtonStyle.success)
-    async def love(self, button, interaction):
-        await interaction.response.send_message(randomQuote("love"))
-        self.value = "love"
-        self.stop()
-    @nextcord.ui.button(label="Sad 😭", style=nextcord.ButtonStyle.success)
-    async def sad(self, button, interaction):
-        await interaction.response.send_message(randomQuote("sad")) 
-        self.value = "sad"
-        self.stop()
-
-@bot.command(aliases=['q'])
-@commands.cooldown(1,3,commands.BucketType.user)
-async def quote(ctx): # quote
-    view = QuoteButton()
-    embed = nextcord.Embed(description="กดปุ่มเพื่อเลือก | Which one?", color=blue)
-    await ctx.send(embed=embed, view=view)
-    await view.wait()
 
 bot.run(os.getenv("TOKEN"))
