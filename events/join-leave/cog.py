@@ -14,19 +14,13 @@ class Events(commands.Cog, name="events"):
         
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        channel = welcome_room
-        if channel is not None:
-            await channel.send(f'Welcome {member.mention}.')
-            embed=nextcord.Embed(description=f"{member.mention} has joined." , color=0x2ECC71)
-            await channel.send(embed = embed)
+        embed=nextcord.Embed(description=f"{member.name} has joined." , color=0x2ECC71)
+        await self.bot.get_channel(welcome_room).send(embed = embed)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        channel = welcome_room
-        if channel is not None:
-            embed=nextcord.Embed(description=f"{member.mention} has leaved." , color=0xC70039)
-            await channel.send(embed = embed)
+        embed=nextcord.Embed(description=f"{member.name} has leaved." , color=0xC70039)
+        await self.bot.get_channel(welcome_room).send(embed = embed)
     
 def setup(bot:commands.Bot):
     bot.add_cog(Events(bot))
-    
