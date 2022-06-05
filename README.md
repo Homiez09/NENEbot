@@ -1,5 +1,5 @@
 ### NENE-BOT (Create with Python)
-#### >>> ย้ายโปรเจค [CLICK HERE.](https://github.com/Homiez09/Humkai-bot) <<<
+#### >>> ย้ายโปรเจค [Humkai-bot](https://github.com/Homiez09/Humkai-bot) <<<
 ### Step to setup
 - create .env file
 ```.env
